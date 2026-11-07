@@ -1,0 +1,13 @@
+data.yandex_compute_image.ubuntu: Reading...
+yandex_vpc_network.lab: Refreshing state... [id=enplf3t6doud966mdnm2]
+data.yandex_compute_image.ubuntu: Read complete after 1s [id=fd80ljgpqrj6rekjv5pv]
+yandex_vpc_subnet.lab: Refreshing state... [id=e9bdccpe2te13a0edkfb]
+yandex_vpc_security_group.worker: Refreshing state... [id=enpmfdqjjdp6q5jpddnt]
+yandex_vpc_security_group.web: Refreshing state... [id=enpmskffabcmqkgic41c]
+yandex_compute_instance.worker: Refreshing state... [id=fhmv4112gsprj389fuvn]
+yandex_compute_instance.web: Refreshing state... [id=fhm1kqk64aktarikca21]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.

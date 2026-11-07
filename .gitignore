@@ -1,0 +1,18 @@
+# Локальные провайдеры, состояние, планы и учётные данные
+.terraform/
+terraform.tfstate*
+*.tfvars
+*.tfvars.json
+.tfvars
+*.tfplan
+.local/
+key.json
+crash.log
+
+# Временные рендеры, локальный архив и исходные учебные материалы
+/tmp/
+/submission.zip
+/L-04.pdf
+/lab-04 (1).pdf
+.DS_Store
+__pycache__/

@@ -1,0 +1,401 @@
+data.yandex_compute_image.ubuntu: Reading...
+yandex_vpc_network.lab: Refreshing state... [id=enplf3t6doud966mdnm2]
+data.yandex_compute_image.ubuntu: Read complete after 1s [id=fd80ljgpqrj6rekjv5pv]
+yandex_vpc_subnet.lab: Refreshing state... [id=e9bdccpe2te13a0edkfb]
+yandex_vpc_security_group.worker: Refreshing state... [id=enpmfdqjjdp6q5jpddnt]
+yandex_vpc_security_group.web: Refreshing state... [id=enpmskffabcmqkgic41c]
+yandex_compute_instance.worker: Refreshing state... [id=fhmv4112gsprj389fuvn]
+yandex_compute_instance.web: Refreshing state... [id=fhm1kqk64aktarikca21]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # yandex_compute_instance.web will be destroyed
+  - resource "yandex_compute_instance" "web" {
+      - created_at                = "2026-11-07T15:05:10Z" -> null
+      - folder_id                 = "b1glrcbp3t6dprvse2m9" -> null
+      - fqdn                      = "fhm1kqk64aktarikca21.auto.internal" -> null
+      - hardware_generation       = [
+          - {
+              - generation2_features = []
+              - legacy_features      = [
+                  - {
+                      - pci_topology = "PCI_TOPOLOGY_V2"
+                    },
+                ]
+            },
+        ] -> null
+      - id                        = "fhm1kqk64aktarikca21" -> null
+      - labels                    = {} -> null
+      - metadata                  = {
+          - "user-data" = <<-EOT
+                #cloud-config
+                users:
+                  - name: student
+                    groups: [sudo]
+                    shell: /bin/bash
+                    sudo: ALL=(ALL) NOPASSWD:ALL
+                    ssh_authorized_keys:
+                      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICL98nhBSwZarfINhHwa0wN3NWyAC2BdmTk3BeXg1APh lab-4
+                ssh_pwauth: false
+                package_update: true
+                packages:
+                  - docker.io
+                runcmd:
+                  - [systemctl, enable, --now, docker]
+                  - [docker, run, -d, --restart=unless-stopped, --name, lab-web, -p, "8080:80", "nginx:stable-alpine"]
+            EOT
+        } -> null
+      - name                      = "web" -> null
+      - network_acceleration_type = "standard" -> null
+      - platform_id               = "standard-v3" -> null
+      - status                    = "running" -> null
+      - zone                      = "ru-central1-a" -> null
+        # (6 unchanged attributes hidden)
+
+      - boot_disk {
+          - auto_delete = true -> null
+          - device_name = "fhmefe18uclbl1dbcder" -> null
+          - disk_id     = "fhmefe18uclbl1dbcder" -> null
+          - mode        = "READ_WRITE" -> null
+
+          - initialize_params {
+              - block_size  = 4096 -> null
+              - image_id    = "fd80ljgpqrj6rekjv5pv" -> null
+                name        = null
+              - size        = 10 -> null
+              - type        = "network-hdd" -> null
+                # (3 unchanged attributes hidden)
+            }
+        }
+
+      - metadata_options {
+          - aws_v1_http_endpoint = 1 -> null
+          - aws_v1_http_token    = 2 -> null
+          - aws_v2_http_endpoint = 1 -> null
+          - aws_v2_http_token    = 1 -> null
+          - gce_http_endpoint    = 1 -> null
+          - gce_http_token       = 1 -> null
+        }
+
+      - network_interface {
+          - index              = 0 -> null
+          - ip_address         = "10.10.0.18" -> null
+          - ipv4               = true -> null
+          - ipv6               = false -> null
+          - mac_address        = "d0:0d:1a:6a:86:22" -> null
+          - nat                = true -> null
+          - nat_ip_address     = "51.250.10.147" -> null
+          - nat_ip_version     = "IPV4" -> null
+          - security_group_ids = [
+              - "enpmskffabcmqkgic41c",
+            ] -> null
+          - subnet_id          = "e9bdccpe2te13a0edkfb" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - placement_policy {
+          - host_affinity_rules       = [] -> null
+          - placement_group_partition = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - resources {
+          - core_fraction = 20 -> null
+          - cores         = 2 -> null
+          - gpus          = 0 -> null
+          - memory        = 2 -> null
+        }
+
+      - scheduling_policy {
+          - preemptible = false -> null
+        }
+    }
+
+  # yandex_compute_instance.worker will be destroyed
+  - resource "yandex_compute_instance" "worker" {
+      - created_at                = "2026-11-07T15:05:11Z" -> null
+      - folder_id                 = "b1glrcbp3t6dprvse2m9" -> null
+      - fqdn                      = "fhmv4112gsprj389fuvn.auto.internal" -> null
+      - hardware_generation       = [
+          - {
+              - generation2_features = []
+              - legacy_features      = [
+                  - {
+                      - pci_topology = "PCI_TOPOLOGY_V2"
+                    },
+                ]
+            },
+        ] -> null
+      - id                        = "fhmv4112gsprj389fuvn" -> null
+      - labels                    = {} -> null
+      - metadata                  = {
+          - "user-data" = <<-EOT
+                #cloud-config
+                users:
+                  - name: student
+                    groups: [sudo]
+                    shell: /bin/bash
+                    sudo: ALL=(ALL) NOPASSWD:ALL
+                    ssh_authorized_keys:
+                      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICL98nhBSwZarfINhHwa0wN3NWyAC2BdmTk3BeXg1APh lab-4
+                ssh_pwauth: false
+                # Python 3 уже установлен в публичном Ubuntu 22.04 LTS.
+                # Пакеты из интернета здесь не скачиваются: у worker нет NAT.
+                write_files:
+                  - path: /opt/worker.py
+                    permissions: '0644'
+                    content: |
+                      import time
+                      from datetime import datetime, timezone
+                
+                      while True:
+                          with open("/var/log/worker.log", "a") as log:
+                              log.write(f"Task {datetime.now(timezone.utc).isoformat()}\n")
+                          time.sleep(60)
+                  - path: /etc/systemd/system/lab-worker.service
+                    permissions: '0644'
+                    content: |
+                      [Unit]
+                      Description=Lab background worker
+                      After=network.target
+                
+                      [Service]
+                      ExecStart=/usr/bin/python3 /opt/worker.py
+                      Restart=always
+                      RestartSec=5
+                
+                      [Install]
+                      WantedBy=multi-user.target
+                runcmd:
+                  - [sh, -c, "test -x /usr/bin/python3"]
+                  - [systemctl, daemon-reload]
+                  - [systemctl, enable, --now, lab-worker]
+            EOT
+        } -> null
+      - name                      = "worker" -> null
+      - network_acceleration_type = "standard" -> null
+      - platform_id               = "standard-v3" -> null
+      - status                    = "running" -> null
+      - zone                      = "ru-central1-a" -> null
+        # (6 unchanged attributes hidden)
+
+      - boot_disk {
+          - auto_delete = true -> null
+          - device_name = "fhmq3ktu51akrfu7f5cg" -> null
+          - disk_id     = "fhmq3ktu51akrfu7f5cg" -> null
+          - mode        = "READ_WRITE" -> null
+
+          - initialize_params {
+              - block_size  = 4096 -> null
+              - image_id    = "fd80ljgpqrj6rekjv5pv" -> null
+                name        = null
+              - size        = 10 -> null
+              - type        = "network-hdd" -> null
+                # (3 unchanged attributes hidden)
+            }
+        }
+
+      - metadata_options {
+          - aws_v1_http_endpoint = 1 -> null
+          - aws_v1_http_token    = 2 -> null
+          - aws_v2_http_endpoint = 1 -> null
+          - aws_v2_http_token    = 1 -> null
+          - gce_http_endpoint    = 1 -> null
+          - gce_http_token       = 1 -> null
+        }
+
+      - network_interface {
+          - index              = 0 -> null
+          - ip_address         = "10.10.0.25" -> null
+          - ipv4               = true -> null
+          - ipv6               = false -> null
+          - mac_address        = "d0:0d:1f:20:42:28" -> null
+          - nat                = false -> null
+          - security_group_ids = [
+              - "enpmfdqjjdp6q5jpddnt",
+            ] -> null
+          - subnet_id          = "e9bdccpe2te13a0edkfb" -> null
+            # (3 unchanged attributes hidden)
+        }
+
+      - placement_policy {
+          - host_affinity_rules       = [] -> null
+          - placement_group_partition = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - resources {
+          - core_fraction = 20 -> null
+          - cores         = 2 -> null
+          - gpus          = 0 -> null
+          - memory        = 2 -> null
+        }
+
+      - scheduling_policy {
+          - preemptible = false -> null
+        }
+    }
+
+  # yandex_vpc_network.lab will be destroyed
+  - resource "yandex_vpc_network" "lab" {
+      - created_at                = "2026-11-07T14:46:11Z" -> null
+      - default_security_group_id = "enp96j7hsrdgmp0ec5up" -> null
+      - folder_id                 = "b1glrcbp3t6dprvse2m9" -> null
+      - id                        = "enplf3t6doud966mdnm2" -> null
+      - labels                    = {} -> null
+      - name                      = "tf-lesson-vpc" -> null
+      - subnet_ids                = [
+          - "e9bdccpe2te13a0edkfb",
+        ] -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # yandex_vpc_security_group.web will be destroyed
+  - resource "yandex_vpc_security_group" "web" {
+      - created_at  = "2026-11-07T15:05:08Z" -> null
+      - folder_id   = "b1glrcbp3t6dprvse2m9" -> null
+      - id          = "enpmskffabcmqkgic41c" -> null
+      - labels      = {} -> null
+      - name        = "tf-lesson-web-sg" -> null
+      - network_id  = "enplf3t6doud966mdnm2" -> null
+      - status      = "ACTIVE" -> null
+        # (1 unchanged attribute hidden)
+
+      - egress {
+          - from_port         = -1 -> null
+          - id                = "enp1of49r4ct28qmpfgr" -> null
+          - labels            = {} -> null
+          - port              = -1 -> null
+          - protocol          = "ANY" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (3 unchanged attributes hidden)
+        }
+
+      - ingress {
+          - description       = "HTTP API" -> null
+          - from_port         = -1 -> null
+          - id                = "enp5lnkbgvvcqkvp5277" -> null
+          - labels            = {} -> null
+          - port              = 8080 -> null
+          - protocol          = "TCP" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (2 unchanged attributes hidden)
+        }
+      - ingress {
+          - description       = "SSH" -> null
+          - from_port         = -1 -> null
+          - id                = "enpoinb5r45o0sojpkgu" -> null
+          - labels            = {} -> null
+          - port              = 22 -> null
+          - protocol          = "TCP" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (2 unchanged attributes hidden)
+        }
+    }
+
+  # yandex_vpc_security_group.worker will be destroyed
+  - resource "yandex_vpc_security_group" "worker" {
+      - created_at  = "2026-11-07T15:05:10Z" -> null
+      - folder_id   = "b1glrcbp3t6dprvse2m9" -> null
+      - id          = "enpmfdqjjdp6q5jpddnt" -> null
+      - labels      = {} -> null
+      - name        = "tf-lesson-worker-sg" -> null
+      - network_id  = "enplf3t6doud966mdnm2" -> null
+      - status      = "ACTIVE" -> null
+        # (1 unchanged attribute hidden)
+
+      - egress {
+          - from_port         = -1 -> null
+          - id                = "enp9a4hr1i1jercdr5j6" -> null
+          - labels            = {} -> null
+          - port              = -1 -> null
+          - protocol          = "ANY" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (3 unchanged attributes hidden)
+        }
+
+      - ingress {
+          - description       = "SSH from the lab subnet only" -> null
+          - from_port         = -1 -> null
+          - id                = "enp5b8kfcdv45vedu76u" -> null
+          - labels            = {} -> null
+          - port              = 22 -> null
+          - protocol          = "TCP" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "10.10.0.0/24",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (2 unchanged attributes hidden)
+        }
+    }
+
+  # yandex_vpc_subnet.lab will be destroyed
+  - resource "yandex_vpc_subnet" "lab" {
+      - created_at     = "2026-11-07T14:46:14Z" -> null
+      - folder_id      = "b1glrcbp3t6dprvse2m9" -> null
+      - id             = "e9bdccpe2te13a0edkfb" -> null
+      - labels         = {} -> null
+      - name           = "tf-lesson-subnet" -> null
+      - network_id     = "enplf3t6doud966mdnm2" -> null
+      - v4_cidr_blocks = [
+          - "10.10.0.0/24",
+        ] -> null
+      - v6_cidr_blocks = [] -> null
+      - zone           = "ru-central1-a" -> null
+        # (2 unchanged attributes hidden)
+    }
+
+Plan: 0 to add, 0 to change, 6 to destroy.
+
+Changes to Outputs:
+  - network_id        = "enplf3t6doud966mdnm2" -> null
+  - subnet_id         = "e9bdccpe2te13a0edkfb" -> null
+  - web_private_ip    = "10.10.0.18" -> null
+  - web_public_ip     = "51.250.10.147" -> null
+  - worker_private_ip = "10.10.0.25" -> null
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value: 
+yandex_compute_instance.worker: Destroying... [id=fhmv4112gsprj389fuvn]
+yandex_compute_instance.web: Destroying... [id=fhm1kqk64aktarikca21]
+yandex_compute_instance.web: Still destroying... [id=fhm1kqk64aktarikca21, 00m10s elapsed]
+yandex_compute_instance.worker: Still destroying... [id=fhmv4112gsprj389fuvn, 00m10s elapsed]
+yandex_compute_instance.web: Still destroying... [id=fhm1kqk64aktarikca21, 00m20s elapsed]
+yandex_compute_instance.worker: Still destroying... [id=fhmv4112gsprj389fuvn, 00m20s elapsed]
+yandex_compute_instance.web: Destruction complete after 24s
+yandex_vpc_security_group.web: Destroying... [id=enpmskffabcmqkgic41c]
+yandex_vpc_security_group.web: Destruction complete after 1s
+yandex_compute_instance.worker: Still destroying... [id=fhmv4112gsprj389fuvn, 00m30s elapsed]
+yandex_compute_instance.worker: Destruction complete after 30s
+yandex_vpc_subnet.lab: Destroying... [id=e9bdccpe2te13a0edkfb]
+yandex_vpc_security_group.worker: Destroying... [id=enpmfdqjjdp6q5jpddnt]
+yandex_vpc_security_group.worker: Destruction complete after 1s
+yandex_vpc_subnet.lab: Destruction complete after 7s
+yandex_vpc_network.lab: Destroying... [id=enplf3t6doud966mdnm2]
+yandex_vpc_network.lab: Destruction complete after 0s
+
+Destroy complete! Resources: 6 destroyed.

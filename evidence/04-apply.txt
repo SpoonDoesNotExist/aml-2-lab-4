@@ -1,0 +1,16 @@
+# Фрагмент успешного вывода терминала, переданный пользователем в чате.
+# Сеть и подсеть уже были созданы; этот apply добавил оставшиеся 4 ресурса.
+$ terraform apply .local/create.tfplan
+yandex_vpc_security_group.web: Creation complete after 2s [id=enpmskffabcmqkgic41c]
+yandex_vpc_security_group.worker: Creation complete after 4s [id=enpmfdqjjdp6q5jpddnt]
+yandex_compute_instance.web: Creation complete after 38s [id=fhm1kqk64aktarikca21]
+yandex_compute_instance.worker: Creation complete after 40s [id=fhmv4112gsprj389fuvn]
+
+Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
+
+Outputs:
+network_id = "enplf3t6doud966mdnm2"
+subnet_id = "e9bdccpe2te13a0edkfb"
+web_private_ip = "10.10.0.18"
+web_public_ip = "51.250.10.147"
+worker_private_ip = "10.10.0.25"

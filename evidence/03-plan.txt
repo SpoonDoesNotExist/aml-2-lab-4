@@ -1,0 +1,331 @@
+data.yandex_compute_image.ubuntu: Reading...
+data.yandex_compute_image.ubuntu: Read complete after 1s [id=fd80ljgpqrj6rekjv5pv]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # yandex_compute_instance.web will be created
+  + resource "yandex_compute_instance" "web" {
+      + created_at                = (known after apply)
+      + folder_id                 = (known after apply)
+      + fqdn                      = (known after apply)
+      + gpu_cluster_id            = (known after apply)
+      + hardware_generation       = (known after apply)
+      + hostname                  = (known after apply)
+      + id                        = (known after apply)
+      + maintenance_grace_period  = (known after apply)
+      + maintenance_policy        = (known after apply)
+      + metadata                  = {
+          + "user-data" = <<-EOT
+                #cloud-config
+                users:
+                  - name: student
+                    groups: [sudo]
+                    shell: /bin/bash
+                    sudo: ALL=(ALL) NOPASSWD:ALL
+                    ssh_authorized_keys:
+                      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICL98nhBSwZarfINhHwa0wN3NWyAC2BdmTk3BeXg1APh lab-4
+                ssh_pwauth: false
+                package_update: true
+                packages:
+                  - docker.io
+                runcmd:
+                  - [systemctl, enable, --now, docker]
+                  - [docker, run, -d, --restart=unless-stopped, --name, lab-web, -p, "8080:80", "nginx:stable-alpine"]
+            EOT
+        }
+      + name                      = "web"
+      + network_acceleration_type = "standard"
+      + platform_id               = "standard-v3"
+      + reserved_instance_pool_id = (known after apply)
+      + status                    = (known after apply)
+      + zone                      = "ru-central1-a"
+
+      + boot_disk {
+          + auto_delete = true
+          + device_name = (known after apply)
+          + disk_id     = (known after apply)
+          + mode        = (known after apply)
+
+          + initialize_params {
+              + block_size  = (known after apply)
+              + description = (known after apply)
+              + image_id    = "fd80ljgpqrj6rekjv5pv"
+              + name        = (known after apply)
+              + size        = 10
+              + snapshot_id = (known after apply)
+              + type        = "network-hdd"
+            }
+        }
+
+      + metadata_options (known after apply)
+
+      + network_interface {
+          + index              = (known after apply)
+          + ip_address         = (known after apply)
+          + ipv4               = true
+          + ipv6               = (known after apply)
+          + ipv6_address       = (known after apply)
+          + mac_address        = (known after apply)
+          + nat                = true
+          + nat_ip_address     = (known after apply)
+          + nat_ip_version     = (known after apply)
+          + security_group_ids = (known after apply)
+          + subnet_id          = (known after apply)
+        }
+
+      + placement_policy (known after apply)
+
+      + resources {
+          + core_fraction = 20
+          + cores         = 2
+          + memory        = 2
+        }
+
+      + scheduling_policy (known after apply)
+    }
+
+  # yandex_compute_instance.worker will be created
+  + resource "yandex_compute_instance" "worker" {
+      + created_at                = (known after apply)
+      + folder_id                 = (known after apply)
+      + fqdn                      = (known after apply)
+      + gpu_cluster_id            = (known after apply)
+      + hardware_generation       = (known after apply)
+      + hostname                  = (known after apply)
+      + id                        = (known after apply)
+      + maintenance_grace_period  = (known after apply)
+      + maintenance_policy        = (known after apply)
+      + metadata                  = {
+          + "user-data" = <<-EOT
+                #cloud-config
+                users:
+                  - name: student
+                    groups: [sudo]
+                    shell: /bin/bash
+                    sudo: ALL=(ALL) NOPASSWD:ALL
+                    ssh_authorized_keys:
+                      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICL98nhBSwZarfINhHwa0wN3NWyAC2BdmTk3BeXg1APh lab-4
+                ssh_pwauth: false
+                # Python 3 уже установлен в публичном Ubuntu 22.04 LTS.
+                # Пакеты из интернета здесь не скачиваются: у worker нет NAT.
+                write_files:
+                  - path: /opt/worker.py
+                    permissions: '0644'
+                    content: |
+                      import time
+                      from datetime import datetime, timezone
+                
+                      while True:
+                          with open("/var/log/worker.log", "a") as log:
+                              log.write(f"Task {datetime.now(timezone.utc).isoformat()}\n")
+                          time.sleep(60)
+                  - path: /etc/systemd/system/lab-worker.service
+                    permissions: '0644'
+                    content: |
+                      [Unit]
+                      Description=Lab background worker
+                      After=network.target
+                
+                      [Service]
+                      ExecStart=/usr/bin/python3 /opt/worker.py
+                      Restart=always
+                      RestartSec=5
+                
+                      [Install]
+                      WantedBy=multi-user.target
+                runcmd:
+                  - [sh, -c, "test -x /usr/bin/python3"]
+                  - [systemctl, daemon-reload]
+                  - [systemctl, enable, --now, lab-worker]
+            EOT
+        }
+      + name                      = "worker"
+      + network_acceleration_type = "standard"
+      + platform_id               = "standard-v3"
+      + reserved_instance_pool_id = (known after apply)
+      + status                    = (known after apply)
+      + zone                      = "ru-central1-a"
+
+      + boot_disk {
+          + auto_delete = true
+          + device_name = (known after apply)
+          + disk_id     = (known after apply)
+          + mode        = (known after apply)
+
+          + initialize_params {
+              + block_size  = (known after apply)
+              + description = (known after apply)
+              + image_id    = "fd80ljgpqrj6rekjv5pv"
+              + name        = (known after apply)
+              + size        = 10
+              + snapshot_id = (known after apply)
+              + type        = "network-hdd"
+            }
+        }
+
+      + metadata_options (known after apply)
+
+      + network_interface {
+          + index              = (known after apply)
+          + ip_address         = (known after apply)
+          + ipv4               = true
+          + ipv6               = (known after apply)
+          + ipv6_address       = (known after apply)
+          + mac_address        = (known after apply)
+          + nat                = false
+          + nat_ip_address     = (known after apply)
+          + nat_ip_version     = (known after apply)
+          + security_group_ids = (known after apply)
+          + subnet_id          = (known after apply)
+        }
+
+      + placement_policy (known after apply)
+
+      + resources {
+          + core_fraction = 20
+          + cores         = 2
+          + memory        = 2
+        }
+
+      + scheduling_policy (known after apply)
+    }
+
+  # yandex_vpc_network.lab will be created
+  + resource "yandex_vpc_network" "lab" {
+      + created_at                = (known after apply)
+      + default_security_group_id = (known after apply)
+      + folder_id                 = (known after apply)
+      + id                        = (known after apply)
+      + labels                    = (known after apply)
+      + name                      = "tf-lesson-vpc"
+      + subnet_ids                = (known after apply)
+    }
+
+  # yandex_vpc_security_group.web will be created
+  + resource "yandex_vpc_security_group" "web" {
+      + created_at = (known after apply)
+      + folder_id  = (known after apply)
+      + id         = (known after apply)
+      + labels     = (known after apply)
+      + name       = "tf-lesson-web-sg"
+      + network_id = (known after apply)
+      + status     = (known after apply)
+
+      + egress {
+          + from_port         = -1
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = -1
+          + protocol          = "ANY"
+          + to_port           = -1
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (3 unchanged attributes hidden)
+        }
+
+      + ingress {
+          + description       = "HTTP API"
+          + from_port         = -1
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = 8080
+          + protocol          = "TCP"
+          + to_port           = -1
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (2 unchanged attributes hidden)
+        }
+      + ingress {
+          + description       = "SSH"
+          + from_port         = -1
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = 22
+          + protocol          = "TCP"
+          + to_port           = -1
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (2 unchanged attributes hidden)
+        }
+    }
+
+  # yandex_vpc_security_group.worker will be created
+  + resource "yandex_vpc_security_group" "worker" {
+      + created_at = (known after apply)
+      + folder_id  = (known after apply)
+      + id         = (known after apply)
+      + labels     = (known after apply)
+      + name       = "tf-lesson-worker-sg"
+      + network_id = (known after apply)
+      + status     = (known after apply)
+
+      + egress {
+          + from_port         = -1
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = -1
+          + protocol          = "ANY"
+          + to_port           = -1
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (3 unchanged attributes hidden)
+        }
+
+      + ingress {
+          + description       = "SSH from the lab subnet only"
+          + from_port         = -1
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = 22
+          + protocol          = "TCP"
+          + to_port           = -1
+          + v4_cidr_blocks    = [
+              + "10.10.0.0/24",
+            ]
+          + v6_cidr_blocks    = []
+            # (2 unchanged attributes hidden)
+        }
+    }
+
+  # yandex_vpc_subnet.lab will be created
+  + resource "yandex_vpc_subnet" "lab" {
+      + created_at     = (known after apply)
+      + folder_id      = (known after apply)
+      + id             = (known after apply)
+      + labels         = (known after apply)
+      + name           = "tf-lesson-subnet"
+      + network_id     = (known after apply)
+      + v4_cidr_blocks = [
+          + "10.10.0.0/24",
+        ]
+      + v6_cidr_blocks = (known after apply)
+      + zone           = "ru-central1-a"
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + network_id        = (known after apply)
+  + subnet_id         = (known after apply)
+  + web_private_ip    = (known after apply)
+  + web_public_ip     = (known after apply)
+  + worker_private_ip = (known after apply)
+
+─────────────────────────────────────────────────────────────────────────────
+
+Saved the plan to: .local/create.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply ".local/create.tfplan"

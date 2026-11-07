@@ -1,0 +1,67 @@
+
+--- Public HTTP on port 8080 ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   896  100   896    0     0   6037      0 --:--:-- --:--:-- --:--:--  6054
+HTTP/1.1 200 OK
+Server: nginx/1.30.6
+Date: Sat, 07 Nov 2026 15:07:24 GMT
+Content-Type: text/html
+Content-Length: 896
+Last-Modified: Fri, 02 Oct 2026 17:14:31 GMT
+Connection: keep-alive
+ETag: "6abfe677-380"
+Accept-Ranges: bytes
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, nginx is successfully installed and working.
+Further configuration is required for the web server, reverse proxy, 
+API gateway, load balancer, content cache, or other features.</p>
+
+<p>For online documentation and support please refer to
+<a href="https://nginx.org/">nginx.org</a>.<br/>
+To engage with the community please visit
+<a href="https://community.nginx.org/">community.nginx.org</a>.<br/>
+For enterprise grade support, professional services, additional 
+security features and capabilities please refer to
+<a href="https://f5.com/nginx">f5.com/nginx</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+
+--- Web cloud-init and Docker ---
+Warning: Permanently added '51.250.10.147' (ED25519) to the list of known hosts.
+status: done
+CONTAINER ID   IMAGE                 COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+46d1e4dfc370   nginx:stable-alpine   "/docker-entrypoint.…"   49 seconds ago   Up 47 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   lab-web
+State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess
+LISTEN 0      4096       127.0.0.1:33461      0.0.0.0:*          
+LISTEN 0      4096   127.0.0.53%lo:53         0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:8080       0.0.0.0:*          
+LISTEN 0      128          0.0.0.0:22         0.0.0.0:*          
+LISTEN 0      4096            [::]:8080          [::]:*          
+LISTEN 0      128             [::]:22            [::]:*          
+
+--- Worker via web (SSH jump host) ---
+Warning: Permanently added '10.10.0.25' (ED25519) to the list of known hosts.
+fhmv4112gsprj389fuvn
+status: done
+Python 3.10.12
+active
+Task 2026-11-07T15:06:03.970649+00:00
+Task 2026-11-07T15:07:04.030833+00:00
+
+--- Worker port 8080 from web must be blocked ---
+worker:8080 connect_ex = 11

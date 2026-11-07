@@ -1,0 +1,40 @@
+#cloud-config
+users:
+  - name: ${ssh_user}
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ${ssh_key}
+ssh_pwauth: false
+# Python 3 уже установлен в публичном Ubuntu 22.04 LTS.
+# Пакеты из интернета здесь не скачиваются: у worker нет NAT.
+write_files:
+  - path: /opt/worker.py
+    permissions: '0644'
+    content: |
+      import time
+      from datetime import datetime, timezone
+
+      while True:
+          with open("/var/log/worker.log", "a") as log:
+              log.write(f"Task {datetime.now(timezone.utc).isoformat()}\n")
+          time.sleep(60)
+  - path: /etc/systemd/system/lab-worker.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Lab background worker
+      After=network.target
+
+      [Service]
+      ExecStart=/usr/bin/python3 /opt/worker.py
+      Restart=always
+      RestartSec=5
+
+      [Install]
+      WantedBy=multi-user.target
+runcmd:
+  - [sh, -c, "test -x /usr/bin/python3"]
+  - [systemctl, daemon-reload]
+  - [systemctl, enable, --now, lab-worker]
